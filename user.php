@@ -10,8 +10,7 @@ class User implements Crud
 	private $last_name;
 	private $city_name;
 
-	function __construct($first_name,$last_name,$city_name)
-	{
+	function __construct($first_name,$last_name,$city_name){
 		$this->first_name=$first_name;
 		$this->last_name=$last_name;
 		$this->city_name=$city_name;
@@ -34,7 +33,38 @@ $res=mysqli_query("INSERT INTO user (first_name,last_name,city_name) VALUES('$fn
 return $res;
 
 }
-public function readAll(){return null;}
+
+public function readAll(){
+//$conn=connect();
+
+$result=mysqli_query("SELECT * FROM user") or die("Error: ".mysql_error());
+$rowData=array();
+echo '<table border="0" cellspacing="2" cellpadding="3"> 
+      <tr> 
+          <td> <font face="Arial">index</font> </td> 
+          
+          <td> <font face="Arial">First name</font> </td> 
+          <td> <font face="Arial">Last Name</font> </td> 
+          <td> <font face="Arial">City name</font> </td> 
+         
+      </tr>';
+if ($result = query($sql)) {
+    while ($row = $result->fetch_assoc()) {
+        $rowData[]=$row;
+                }
+                for($i=0;$i<count($rowData);$i++){
+                                echo '<tr> ';
+                                foreach($rowData[$i] as $key=>$value){
+                                                echo '<td>'.$value.'</td> ';
+                                }
+                                echo '</tr>';
+                }
+                                
+    }
+/*freeresultset*/
+$result->free();
+
+	return null;}
 	public function readUnique(){return null;}
 	public function search(){return null;}
 	public function update(){return null;}

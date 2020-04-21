@@ -22,7 +22,11 @@ if ($res) {
 	echo "An error occured";
 }
 
+}elseif (isset($_POST['btn-read'])) {
+	$user= new User();
+	$res=(new User)-> readAll();
 }
+
 
 
 ?>
@@ -48,6 +52,11 @@ if ($res) {
 			<tr>
 				<td><button type="submit" name="btn-save"><strong>SAVE</strong></button></td>
 			</tr>
+			<tr>
+				<td><button type="submit" name="btn-read"><strong>READ ALL</strong></button></td>
+			</tr>
+
+			
 			
 		</TABLE>
 	</form>
