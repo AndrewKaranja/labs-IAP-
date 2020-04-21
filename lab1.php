@@ -10,7 +10,7 @@ $city=$_POST['city_name'];
 
 //Creating a user object
 $user= new User($first_name,$last_name,$city);
-$res=(new User)-> save();
+$res=$user->save();
 
 //$res = user -> save();
 
@@ -23,8 +23,11 @@ if ($res) {
 }
 
 }elseif (isset($_POST['btn-read'])) {
-	$user= new User();
-	$res=(new User)-> readAll();
+	$first_name=$_POST['first_name'];
+$last_name=$_POST['last_name'];
+$city=$_POST['city_name'];
+	$user= new User($first_name,$last_name,$city);
+	$res=$user-> readAll();
 }
 
 
