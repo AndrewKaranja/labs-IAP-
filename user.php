@@ -114,7 +114,7 @@ public function save(){
 
 public function readAll(){
 
- $sql1 = "SELECT * FROM users";
+ $sql1 = "SELECT * FROM user";
             $result = $this->conn->conn->query($sql1);
             return $result;}
 	public function readUnique(){return null;}
