@@ -1,7 +1,11 @@
 <?php
 
     // session_start();
+    include_once 'DBConnector.php';
     include_once 'user.php';
+    include_once 'fileUploader.php';
+    $cdb = new DBConnector();
+
 
     if(isset($_POST['btn-save'])){
         $first_name = $_POST['first_name'];
@@ -9,20 +13,59 @@
         $city = $_POST['city_name'];
         $username =$_POST['username'];
         $password=$_POST['password'];
+        $fileName=$_FILES['fileToUpload']['name'];
+        $fileSize=$_FILES['fileToUpload']['size'];
+        $fileType = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
+        $finalName=$_FILES['fileToUpload']['tmp_name'];
+
 
         $user = new User($first_name,$last_name,$city,$username,$password);
-        if(!$user->validateForm()){
-            $user->createFormErrorSessions();
-            header("Refresh:0");
-            die();
-        }
-        $res = $user->save();
-        if($res){
-            echo "save was succesful";
-        }else{
-            echo "An Error occured";
-        }
+
+        $fileUploader = new fileUploader();
+
+    $fileUploader->setOriginalName($fileName);
+    $fileUploader->setType($fileType);
+    $fileUploader->setSize($fileSize);
+    $fileUploader->setFinalName($finalName);
+    $fileUploader->setUsername($username);
+if (!$user->validateForm()) {
+        $user->createFormErrorSessions();
+        header("Refresh:0");
+        die();
+    }else{
+        if ($fileUploader->fileWasSelected()) {
+            if ($fileUploader->fileTypeisCorrect()) {
+                if ($fileUploader->fileSizeIsCorrect()) {
+                    if (!($fileUploader->fileAlreadyExists())) {
+                        
+                    $user->save();
+                    $fileUploader->uploadFile() ;
+
+
+
+                    }else{
+                        echo "FILE EXISTS"."<br>";
+
+                    }
+
+                }else{
+                    echo "PICK A SMALLER SIZE"."<br>";
+                }
+
+            }else{
+                echo "INCORRECT TYPE"."<br>";
+            }
+
+
+        }else{echo "NO FILE DETECTED"."<br>";}
     }
+ 
+
+    $cdb->closeDatabase();
+	
+
+    
+}
     
 ?>
 
@@ -32,10 +75,11 @@
 <head>
 	<title>Lab 1</title>
 	<script type="text/javascript" src="validate.js"></script>
+    <link rel="stylesheet" type="text/css" href="validate.css">
 </head>
 <body>
 
-	<form method="post" name="user_details" onsubmit="return validateForm()">
+	<form method="post" name="user_details" enctype= "multipart/form-data" onsubmit="return validateForm()">
 		 <div id="form-errors">
             <?php
                 session_start();
@@ -62,6 +106,9 @@
 			<tr>
 				<td><input type="password" name="password" placeholder="password"required></td>
 			</tr>
+            <tr>
+                <td><input type="file" name="fileToUpload" id="fileToUpload"></td>
+            </tr>
 			
 			<tr>
 				<td><button type="submit" name="btn-save"><strong>SAVE</strong></button></td>

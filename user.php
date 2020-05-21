@@ -31,8 +31,11 @@ class User implements Crud,Authenticator
 
 
  public static function create(){
-            $instance = new self();
-            return $instance;
+            // $instance = new self();
+            // return $instance;
+
+            $instance = new ReflectionClass(__CLASS__);
+            return $instance->newInstanceWithoutConstructor();
         }
 
         public function setUsername($username){
@@ -64,14 +67,26 @@ class User implements Crud,Authenticator
         }
 
         public function isPasswordCorrect(){
-            $found = false;
-            $res = $this->conn->conn->query("SELECT * FROM users");
-            while($row = $res->fetch_assoc()){
-                $found = (password_verify($this->getPassword(),$row['password'])&& $this->getUsername() == $row['username']);
-            }
-            $this->conn->closeDatabase();
-            return $found;
+
+            $pdb = new DBConnector();
+		$found = false;
+		$result2 = mysqli_query($pdb->conn,"SELECT * FROM user") or die("Error".mysqli_error());
+			while($row = mysqli_fetch_assoc($result2)) {
+					if (password_verify($this->password, $row['password'])&& $this->getUsername()==$row['username']) {
+						$found=true;
+						return $found;
+					}
+					$pdb->closeDatabase();
+					return $found; 
+            // $found = false;
+            // $res = $this->conn->conn->query("SELECT * FROM user");
+            // while($row = $res->fetch_assoc()){
+            //     $found = (password_verify($this->getPassword(),$row['password'])&& $this->getUsername() == $row['username']);
+            // }
+            // $this->conn->closeDatabase();
+            // return $found;
         }
+    }
 
         public function login(){
             if($this->isPasswordCorrect()){
