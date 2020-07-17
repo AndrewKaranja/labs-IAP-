@@ -1,6 +1,6 @@
 <?php
 
-   include_once '../../../DBconnector';
+   include_once 'C:\xampp\htdocs\webapp\labs(IAP)\DBConnector.php';
 
    class ApiHandler 
    {

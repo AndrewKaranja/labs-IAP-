@@ -1,7 +1,7 @@
 <?php 
 
  include_once 'apiHandler.php';
- include_once '../../../DBconnector';
+ include_once 'C:\xampp\htdocs\webapp\labs(IAP)\DBConnector.php';
 
  $api = new ApiHandler();
 
