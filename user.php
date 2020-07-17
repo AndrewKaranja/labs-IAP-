@@ -14,8 +14,11 @@ class User implements Crud,Authenticator
 	private $last_name;
 	private $city_name;
      private $username;
-        private $password;
+         private $password;
          private $conn;
+
+         private $tmzn_off;
+         private $utc_timestamp;
 
 	function __construct($first_name,$last_name,$city_name,$username,$password){
 		$this->first_name=$first_name;
@@ -61,6 +64,30 @@ class User implements Crud,Authenticator
         public function getUserId(){
             return $this->user_id;
         }
+
+        //time_zone_offset setter and getter
+
+    public function getTimezoneOffset()
+    {
+        return $this->tmzn_off;
+    }
+
+    public function setTimezoneOffset($tMzOffset)
+    {
+        $this->tmzn_off = $tMzOffset;
+    }
+
+
+    //Utc_timestamp setter and getter
+    public function getUtcTimestamp()
+    {
+        return $this->utc_timestamp;
+    }
+
+    public function setUtcTimestamp($utc_timestamp)
+    {
+        $this->utc_timestamp = $utc_timestamp;
+    }
 
         public function hashPassword(){
             $this->password = hash("sha256",$this->password);

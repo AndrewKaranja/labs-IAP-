@@ -4,6 +4,7 @@
     include_once 'DBConnector.php';
     include_once 'user.php';
     include_once 'fileUploader.php';
+ 
     $cdb = new DBConnector();
 
 
@@ -18,8 +19,16 @@
         $fileType = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
         $finalName=$_FILES['fileToUpload']['tmp_name'];
 
+        $utc_timestamp = $_POST['utc_timestamp'];
+      $offset = $_POST['time_zone_offset'];
+
 
         $user = new User($first_name,$last_name,$city,$username,$password);
+
+
+         //Pass timezone information to database
+      $user->setUtcTimestamp($utc_timestamp);
+      $user->setTimezoneOffset($offset);
 
         $fileUploader = new fileUploader();
 
@@ -118,9 +127,13 @@ if (!$user->validateForm()) {
 				<td><a href="login.php">Login</a></td>
 			</tr>
 
+            <tr>
+                 <td> <input type="hidden" name="utc_timestamp" id="utc_timestamp" value=""> </td> 
+             </tr>
 
-			
-			
+             <tr>
+                     <td> <input type="hidden" name="time_zone_offset" id="time_zone_offset" value=""> </td>
+             </tr>
 		</TABLE>
 	</form>
 	<h3>Users</h3>
